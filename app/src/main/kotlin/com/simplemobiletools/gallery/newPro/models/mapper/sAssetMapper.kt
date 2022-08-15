@@ -9,6 +9,7 @@ class sAssetMapper : Mapper<ImageDataResponse, List<Medium>>() {
         val lstMedium = mutableListOf<Medium>()
         input.data?.forEach {
             lstMedium.add(Medium(
+
             ))
         }
         return lstMedium

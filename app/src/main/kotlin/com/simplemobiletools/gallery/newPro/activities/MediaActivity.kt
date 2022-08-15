@@ -4,17 +4,23 @@ import android.app.Activity
 import android.app.SearchManager
 import android.app.WallpaperManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuItemCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +56,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+
 
 class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private val LAST_MEDIA_CHECK_PERIOD = 3000L
@@ -125,6 +137,9 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
         config.mediaColumnCnt = 5
         columnCountChanged()
+
+        val uri:Uri = saveImageToStorage(R.drawable.img_widget_preview)
+        Toast.makeText(applicationContext,"Saved: $uri",Toast.LENGTH_SHORT).show()
     }
 
     override fun onStart() {
@@ -267,6 +282,45 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                     imgDataFromInternet = response.body()?.data!!
                 }
             })
+    }
+
+    // Method to save an image to internal storage
+    private fun saveImageToStorage(drawableId:Int):Uri {
+        val externalStorageState = Environment.getExternalStorageState()
+        if (externalStorageState.equals(Environment.MEDIA_MOUNTED)){
+            val storageDir = Environment.getExternalStorageDirectory().toString()
+            val file = File(storageDir, "${UUID.randomUUID()}.jpg")
+
+            // Get the image from drawable resource as drawable object
+            val drawable = ContextCompat.getDrawable(applicationContext,drawableId)
+
+            // Get the bitmap from drawable object
+            val bitmap = (drawable as BitmapDrawable).bitmap
+
+            try {
+                // Get the file output stream
+                val stream: OutputStream = FileOutputStream(file)
+
+                // Compress bitmap
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+
+                // Flush the stream
+                stream.flush()
+
+                // Close stream
+                stream.close()
+            } catch (e: IOException){ // Catch the exception
+                e.printStackTrace()
+            }
+
+            // Return the saved image uri
+            return Uri.parse(file.absolutePath)
+        } else {
+            val wrapper = ContextWrapper(applicationContext)
+            var file = wrapper.getDir("images", Context.MODE_PRIVATE)
+            file = File(file, "${UUID.randomUUID()}.jpg")
+            return Uri.parse(file.absolutePath)
+        }
     }
 
     private fun refreshMenuItems() {
