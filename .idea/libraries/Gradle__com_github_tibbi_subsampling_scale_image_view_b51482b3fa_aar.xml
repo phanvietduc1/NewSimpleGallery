@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.tibbi:subsampling-scale-image-view:b51482b3fa@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/afd4d97d5c37b0b507e2a0361fb9e48d/transformed/jetified-subsampling-scale-image-view-b51482b3fa/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/afd4d97d5c37b0b507e2a0361fb9e48d/transformed/jetified-subsampling-scale-image-view-b51482b3fa/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/afd4d97d5c37b0b507e2a0361fb9e48d/transformed/jetified-subsampling-scale-image-view-b51482b3fa/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.tibbi/subsampling-scale-image-view/b51482b3fa/ba63f207aabacef54fecd45acc741e1356cc1902/subsampling-scale-image-view-b51482b3fa-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

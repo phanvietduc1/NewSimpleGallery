@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.tibbi:gestureviews:a8e8fa8d27@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d18d665cc8b24687ceff8e67e836f230/transformed/jetified-gestureviews-a8e8fa8d27/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d18d665cc8b24687ceff8e67e836f230/transformed/jetified-gestureviews-a8e8fa8d27/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d18d665cc8b24687ceff8e67e836f230/transformed/jetified-gestureviews-a8e8fa8d27/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.tibbi/gestureviews/a8e8fa8d27/f95bc6aed05936d0c852ba1791675db5cf2f7f82/gestureviews-a8e8fa8d27-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
