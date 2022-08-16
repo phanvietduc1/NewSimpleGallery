@@ -459,6 +459,37 @@ fun Context.loadImage(
     }
 }
 
+fun Context.loadImage1(ish: Boolean,
+    type: Int, path: String, target: MySquareImageView, horizontalScroll: Boolean, animateGifs: Boolean, cropThumbnails: Boolean,
+    roundCorners: Int, signature: ObjectKey, skipMemoryCacheAtPaths: ArrayList<String>? = null
+) {
+    target.isHorizontalScrolling = horizontalScroll
+    if (type == TYPE_IMAGES || type == TYPE_VIDEOS || type == TYPE_RAWS || type == TYPE_PORTRAITS) {
+        if (ish) {
+            loadPng1(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
+        }
+    } else if (type == TYPE_GIFS) {
+        if (!animateGifs) {
+            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
+            return
+        }
+
+        try {
+            val gifDrawable = GifDrawable(path)
+            target.setImageDrawable(gifDrawable)
+            gifDrawable.start()
+
+            target.scaleType = if (cropThumbnails) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
+        } catch (e: Exception) {
+            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
+        } catch (e: OutOfMemoryError) {
+            loadStaticGIF(path, target, cropThumbnails, roundCorners, signature, skipMemoryCacheAtPaths)
+        }
+    } else if (type == TYPE_SVGS) {
+        loadSVG(path, target, cropThumbnails, roundCorners, signature)
+    }
+}
+
 fun Context.addTempFolderIfNeeded(dirs: ArrayList<Directory>): ArrayList<Directory> {
     val tempFolderPath = config.tempFolderPath
     return if (tempFolderPath.isNotEmpty()) {
@@ -478,6 +509,20 @@ fun Context.getPathLocation(path: String): Int {
         isPathOnOTG(path) -> LOCATION_OTG
         else -> LOCATION_INTERNAL
     }
+}
+
+fun Context.loadPng1(
+    path: String,
+    target: MySquareImageView,
+    cropThumbnails: Boolean,
+    roundCorners: Int,
+    signature: ObjectKey,
+    skipMemoryCacheAtPaths: ArrayList<String>? = null
+) {
+    Glide.with(applicationContext)
+        .load(path)
+        .apply(RequestOptions().centerCrop())
+        .into(target)
 }
 
 fun Context.loadPng(

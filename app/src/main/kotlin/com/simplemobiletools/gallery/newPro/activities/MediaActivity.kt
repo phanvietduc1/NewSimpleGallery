@@ -51,6 +51,7 @@ import com.simplemobiletools.gallery.newPro.interfaces.MediaOperationsListener
 import com.simplemobiletools.gallery.newPro.models.Medium
 import com.simplemobiletools.gallery.newPro.models.ThumbnailItem
 import com.simplemobiletools.gallery.newPro.models.ThumbnailSection
+import com.simplemobiletools.gallery.newPro.models.mapper.sAssetMapper
 import kotlinx.android.synthetic.main.activity_media.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -98,7 +99,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     companion object {
         var mMedia = ArrayList<ThumbnailItem>()
-        var imgDataFromInternet = ArrayList<DataImage>()
+        var imgDataFromInternet = ArrayList<Medium>()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -135,11 +136,15 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
         updateWidgets()
 
+        // mode all image
         config.mediaColumnCnt = 5
         columnCountChanged()
 
-        val uri:Uri = saveImageToStorage(R.drawable.img_widget_preview)
-        Toast.makeText(applicationContext,"Saved: $uri",Toast.LENGTH_SHORT).show()
+        // save to storage
+//        val uri:Uri = saveImageToStorage(R.drawable.img_widget_preview)
+//        Toast.makeText(applicationContext,"Saved: $uri",Toast.LENGTH_SHORT).show()
+
+        fetchData()
     }
 
     override fun onStart() {
@@ -269,8 +274,8 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
     //----------------------------------------------
 
-    private fun fechData(){
-        var access_token: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwibG9naW5OYW1lIjoiaWxvdmViaW96IiwiZGlzcGxheU5hbWUiOiJpbG92ZWJpb3oiLCJlbWFpbCI6Imlsb3ZlYmlvekBnbWFpbC5jb20iLCJ0eXBlIjoyLCJpYXQiOjE2NjA1MzA5MjQsImV4cCI6MTY2MjY5MDkyNH0.yHPonyymjE5GK9k6GoMbmyrCF6NYmUZUzl7TMSa8jZ4"
+    private fun fetchData(){
+        var access_token: String = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwibG9naW5OYW1lIjoiaWxvdmViaW96IiwiZGlzcGxheU5hbWUiOiJpbG92ZWJpb3oiLCJlbWFpbCI6Imlsb3ZlYmlvekBnbWFpbC5jb20iLCJ0eXBlIjoyLCJpYXQiOjE2NjA1NTAwMzcsImV4cCI6MTY2MjcxMDAzN30.Dp1WDDplLhQHpozHuHgAM_bmH9SAaqxLDCQlv1_VyNI"
         RetrofitClient.instance.getImages(access_token)
             .enqueue(object: Callback<ImageDataResponse> {
                 override fun onFailure(call: Call<ImageDataResponse>, t: Throwable) {
@@ -279,7 +284,16 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
 
                 override fun onResponse(call: Call<ImageDataResponse>, response: Response<ImageDataResponse>) {
                     Toast.makeText(applicationContext, response.body()?.message, Toast.LENGTH_LONG).show()
-                    imgDataFromInternet = response.body()?.data!!
+                    var img = response.body()
+                    if (img != null) {
+                        // Medium
+                        imgDataFromInternet = sAssetMapper().map(img)
+
+                        // Thumb
+                        val grouped = MediaFetcher(applicationContext).groupMedia(imgDataFromInternet, mPath)
+
+                        gotMedia(grouped, false)
+                    }
                 }
             })
     }
@@ -932,7 +946,7 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
     private fun gotMedia(media: ArrayList<ThumbnailItem>, isFromCache: Boolean) {
         mIsGettingMedia = false
         checkLastMediaChanged()
-        mMedia = media
+        mMedia.addAll(media)
 
         runOnUiThread {
             media_refresh_layout.isRefreshing = false
@@ -955,7 +969,6 @@ class MediaActivity : SimpleActivity(), MediaOperationsListener {
                 it as Medium
             }
 
-            val sMediaToInsert = (imgDataFromInternet)
 
             Thread {
                 try {

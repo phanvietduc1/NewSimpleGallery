@@ -639,19 +639,36 @@ class MediaAdapter(
             }
 
             if (loadImageInstantly) {
-                activity.loadImage(
-                    medium.type, path, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
-                )
+                if (medium.isFromS == true) {
+                    medium.thumbPath?.let {
+                        activity.loadImage1(true,
+                            medium.type,
+                            it, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
+                        )
+                    }
+                } else {
+                    activity.loadImage(
+                        medium.type, path, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
+                    )
+                }
             } else {
                 medium_thumbnail.setImageDrawable(null)
                 medium_thumbnail.isHorizontalScrolling = scrollHorizontally
                 delayHandler.postDelayed({
                     val isVisible = visibleItemPaths.contains(medium.path)
                     if (isVisible) {
-                        activity.loadImage(
-                            medium.type, path, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners,
-                            medium.getKey(), rotatedImagePaths
-                        )
+                        if (medium.isFromS == true) {
+                            medium.thumbPath?.let {
+                                activity.loadImage1(true,
+                                    medium.type,
+                                    it, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
+                                )
+                            }
+                        } else {
+                            activity.loadImage(
+                                medium.type, path, medium_thumbnail, scrollHorizontally, animateGifs, cropThumbnails, roundedCorners, medium.getKey(), rotatedImagePaths
+                            )
+                        }
                     }
                 }, IMAGE_LOAD_DELAY)
             }

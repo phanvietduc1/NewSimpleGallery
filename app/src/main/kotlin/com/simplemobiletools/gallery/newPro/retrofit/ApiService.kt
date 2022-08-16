@@ -1,6 +1,7 @@
 package com.example.simplegallery2.retrofit
 
 import com.example.simplegallery2.models.ImageDataResponse
+import com.simplemobiletools.gallery.newPro.models.Medium
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

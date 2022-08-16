@@ -26,10 +26,71 @@ data class Medium(
     @ColumnInfo(name = "deleted_ts") var deletedTS: Long,
     @ColumnInfo(name = "media_store_id") var mediaStoreId: Long,
 
-    @Ignore var gridPosition: Int = 0   // used at grid view decoration at Grouping enabled
+    @Ignore var gridPosition: Int = 0,   // used at grid view decoration at Grouping enabled
+
+    var thumbPath: String? = "",
+    var isFromS: Boolean? = false
 ) : Serializable, ThumbnailItem() {
 
-    constructor() : this(null, "", "", "", 0L, 0L, 0L, 0, 0, false, 0L, 0L, 0)
+    constructor() : this (
+        null,
+        "",
+        "",
+        "",
+        0L,
+        0L,
+        0L,
+        0,
+        0,
+        false,
+        0L,
+        0L,
+        0,
+        "",
+        false
+//        "",
+//        "",
+//        "",
+//        0L,
+//        0L,
+//        0L,
+//        "",
+//        "",
+//        "",
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        "",
+//        "",
+//        0L,
+//        0L,
+//        0L,
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        "",
+//        0L,
+//        0L,
+//        0L,
+//        0L,
+//        false,
+//        "",
+//        0L,
+//        0L,
+//        "",
+//        "",
+//        0L,
+    )
 
     companion object {
         private const val serialVersionUID = -6553149366975655L
@@ -53,7 +114,7 @@ data class Medium(
 
     fun isHidden() = name.startsWith('.')
 
-    fun isHeic() = name.toLowerCase().endsWith(".heic") || name.toLowerCase().endsWith(".heif")
+    fun isHeic() = name.toLowerCase().endsWith(".heic") ||  name.toLowerCase().endsWith(".heif")
 
     fun getBubbleText(sorting: Int, context: Context, dateFormat: String, timeFormat: String) = when {
         sorting and SORT_BY_NAME != 0 -> name

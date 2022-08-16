@@ -13,7 +13,6 @@ object RetrofitClient {
                 val original = chain.request()
 
                 val requestBuilder = original.newBuilder()
-                        .addHeader("access_token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.UbXKE2v39dtj-7aRRNGfFQFC9sZQMav_Mw4Hjh694U4")
 
                 val request = requestBuilder.build()
                 chain.proceed(request)
@@ -28,5 +27,4 @@ object RetrofitClient {
 
         retrofit.create(ApiService::class.java)
     }
-
 }

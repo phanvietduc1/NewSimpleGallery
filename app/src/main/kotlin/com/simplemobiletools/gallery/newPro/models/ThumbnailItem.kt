@@ -1,3 +1,3 @@
 package com.simplemobiletools.gallery.newPro.models
 
-open class ThumbnailItem
+open class ThumbnailItem()
